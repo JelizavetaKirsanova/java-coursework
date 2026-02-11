@@ -11,6 +11,7 @@ public class Program {
         System.out.println(pow(2, 8)); // 256
     }
 
+
     public static String asBinaryString(int input){
         if (input == 0) return "0";
 
