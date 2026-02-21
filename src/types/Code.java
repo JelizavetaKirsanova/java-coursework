@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class Code {
 
+    private static final boolean[][] table = getSampleTable();
     public static void main(String[] args) {
 
         int[] numbers = {1, 3, -2, 9};
@@ -27,12 +28,12 @@ public class Code {
         return (double) sum(numbers) / numbers.length;
     }
 
-    public static Integer minimumElement(int[] integers) {
-        if (integers.length == 0) {
+    public static Integer minimumElement(int[] numbers) {
+        if (numbers.length == 0) {
             return null;
         }
-        int min = integers[0];
-        for (int value : integers) {
+        int min = numbers[0];
+        for (int value : numbers) {
             if (value < min) {
                 min = value;
             }
@@ -40,97 +41,81 @@ public class Code {
         return min;
     }
 
-    public static String asString(int[] elements) {
-        if (elements.length == 0) {
+    public static String asString(int[] numbers) {
+        if (numbers.length == 0) {
             return "";
         }
-
-        String result = "";
-        for (int i = 0; i < elements.length; i++) {
-            result += elements[i];
-            if (i < elements.length - 1) {
-                result += ", ";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < numbers.length; i++) {
+            sb.append(numbers[i]);
+            if (i < numbers.length - 1) {
+                sb.append(", ");
             }
         }
-        return result;
+        return sb.toString();
     }
 
     public static Character mode(String input) {
-        if (input.length() == 0) {
+        if (input.isEmpty()) {
             return null;
         }
 
+        int[] freq = new int[256]; // ASCII
+        for (char c : input.toCharArray()) {
+            freq[c]++;
+        }
 
-        int maxCount = 0;
-        Character mostFrequent = null;
-        for (int i = 0; i < input.length(); i++) {
-            char current = input.charAt(i);
-            int count = 0;
-
-            for (int j = 0; j < input.length(); j++) {
-                if (input.charAt(j) == current) {
-                    count++;
-                }
-            }
-            if (count > maxCount) {
-                maxCount = count;
-                mostFrequent = current;
+        char mostFrequent = input.charAt(0);
+        int maxCount = freq[mostFrequent];
+        for (char c : input.toCharArray()) {
+            if (freq[c] > maxCount) {
+                mostFrequent = c;
+                maxCount = freq[c];
             }
         }
         return mostFrequent;
     }
 
     public static String squareDigits(String s) {
-
-        String result = "";
-
-
+        StringBuilder result = new StringBuilder();
         for (char c : s.toCharArray()) {
             if (Character.isDigit(c)) {
-                int number = Integer.parseInt(Character.toString(c));
-                result += number * number;
+                int n = Character.getNumericValue(c);
+                result.append(n * n);
             } else {
-                result += c;
+                result.append(c);
             }
         }
-
-        return result;
+        return result.toString();
     }
 
-    public static int isolatedSquareCount() {
-        boolean[][] table = getSampleTable();
-        int isolatedCount = 0;
-        for (int row = 0; row < table.length; row++) {
-            for (int col = 0; col < table[row].length; col++) {
-                if (table[row][col] && isIsolated( row, col)) {
-                    isolatedCount++;
-                }
-            }
-        }
-        return isolatedCount;
-    }
-
-
-    public static boolean isIsolated( int row, int col) {
-        boolean[][] table = getSampleTable();
-
-        printTable(table);
+    public static boolean isIsolated(int row, int col) {
+        if (!table[row][col]) return false;
 
         for (int i = -1; i <= 1; i++) {
+            int newRow = row + i;
+            if (newRow < 0 || newRow >= table.length) continue;
+
             for (int j = -1; j <= 1; j++) {
-                if (i == 0 && j == 0) continue; // skip self
-                int newRow = row + i;
                 int newCol = col + j;
-                if (newRow >= 0 && newRow < table.length &&
-                        newCol >= 0 && newCol < table[0].length) {
-                    if (table[newRow][newCol]) {
-                        return false; // has a neighbor that is true
-                    }
-                }
+                if (newCol < 0 || newCol >= table[0].length) continue;
+                if (i == 0 && j == 0) continue;
+                if (table[newRow][newCol]) return false;
             }
         }
         return true;
     }
+
+    public static int isolatedSquareCount() {
+        int count = 0;
+        for (int row = 0; row < table.length; row++) {
+            for (int col = 0; col < table[row].length; col++) {
+                if (isIsolated(row, col)) count++;
+            }
+        }
+        return count;
+    }
+
 
     private static void printTable(boolean[][] table) {
         for (boolean[] row : table) {
