@@ -7,16 +7,13 @@ public class StackTrace {
     }
 
     public static Double calculatePrice() {
-
         Double basePrice = calculateBasePrice();
-
         return basePrice * (1 + 0.2);
     }
 
     public static Double calculateBasePrice() {
         // some complex calculation that produces 100 as netCost
         Double netCost = 100D;
-
 
         Integer profitConstant = readProfitConstant();
         if (profitConstant == null) {
@@ -27,10 +24,6 @@ public class StackTrace {
     }
 
     public static Integer readProfitConstant() {
-        // Some code that produces null
-        Integer result = null;
-
-        return result;
+        return null;
     }
-
 }

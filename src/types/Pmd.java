@@ -22,50 +22,27 @@ public class Pmd {
 
     // intentionally bad code
     public static boolean containsTrueCell(boolean[][] matrix) {
-        boolean result = false;
-        if (matrix[0][0]) {
-            result = true;
+        for (boolean[] row : matrix) {
+            for (boolean cell : row) {
+                if (cell) {
+                    return true;
+                }
+            }
         }
-        if (matrix[0][1]) {
-            result = true;
-        }
-        if (matrix[0][2]) {
-            result = true;
-        }
-        if (matrix[1][0]) {
-            result = true;
-        }
-        if (matrix[1][1]) {
-            result = true;
-        }
-        if (matrix[1][2]) {
-            result = true;
-        }
-        if (matrix[2][0]) {
-            result = true;
-        }
-        if (matrix[2][1]) {
-            result = true;
-        }
-        if (matrix[2][2]) {
-            result = true;
-        }
-
-        return result;
+        return false;
     }
 
     // intentionally bad code
     public static int countTrueRow(boolean[][] matrix) {
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[0].length; j++) {
-                if (matrix[i][j]) {
+        for (boolean[] row : matrix) {
+            for (int j = 0; j < row.length; j++) {
+                if (row[j]) {
                     int count = 0;
-                    for (int k = 0; k < matrix.length; k++) {
-                        if (matrix[i][k]) {
+                    for (boolean cell : row) {
+                        if (cell) {
                             count++;
                         }
                     }
-
                     return count;
                 }
             }
