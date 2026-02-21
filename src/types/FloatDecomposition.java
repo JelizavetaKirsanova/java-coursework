@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 public class FloatDecomposition {
     public static void main(String[] args) {
+
         float[] values = {1, 2, 3, 4, 5, 6, 0.5f, 0.25f, 0.75f, 0.1f};
 
         for (float value : values) {

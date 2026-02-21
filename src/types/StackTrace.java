@@ -4,6 +4,7 @@ public class StackTrace {
 
     public static void main(String[] args) {
         calculatePrice();
+
     }
 
     public static Double calculatePrice() {

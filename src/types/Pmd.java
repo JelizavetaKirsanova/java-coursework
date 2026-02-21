@@ -35,8 +35,8 @@ public class Pmd {
     // intentionally bad code
     public static int countTrueRow(boolean[][] matrix) {
         for (boolean[] row : matrix) {
-            for (int j = 0; j < row.length; j++) {
-                if (row[j]) {
+            for (boolean cellCheck : row) {
+                if (cellCheck) {
                     int count = 0;
                     for (boolean cell : row) {
                         if (cell) {
