@@ -5,11 +5,10 @@ import java.util.Random;
 
 public class Code {
 
-    private static final boolean[][] table = getSampleTable();
+    private static final boolean[][] TABLE = getSampleTable();
+
     public static void main(String[] args) {
-
         int[] numbers = {1, 3, -2, 9};
-
         System.out.println(sum(numbers)); // 11
     }
 
@@ -60,7 +59,7 @@ public class Code {
             return null;
         }
 
-        int[] freq = new int[256]; // ASCII
+        int[] freq = new int[256];
         for (char c : input.toCharArray()) {
             freq[c]++;
         }
@@ -90,17 +89,27 @@ public class Code {
     }
 
     public static boolean isIsolated(int row, int col) {
-        if (!table[row][col]) return false;
+        if (!TABLE[row][col]) {
+            return false;
+        }
 
         for (int i = -1; i <= 1; i++) {
             int newRow = row + i;
-            if (newRow < 0 || newRow >= table.length) continue;
+            if (newRow < 0 || newRow >= TABLE.length) {
+                continue;
+            }
 
             for (int j = -1; j <= 1; j++) {
                 int newCol = col + j;
-                if (newCol < 0 || newCol >= table[0].length) continue;
-                if (i == 0 && j == 0) continue;
-                if (table[newRow][newCol]) return false;
+                if (newCol < 0 || newCol >= TABLE[0].length) {
+                    continue;
+                }
+                if (i == 0 && j == 0) {
+                    continue;
+                }
+                if (TABLE[newRow][newCol]) {
+                    return false;
+                }
             }
         }
         return true;
@@ -108,14 +117,15 @@ public class Code {
 
     public static int isolatedSquareCount() {
         int count = 0;
-        for (int row = 0; row < table.length; row++) {
-            for (int col = 0; col < table[row].length; col++) {
-                if (isIsolated(row, col)) count++;
+        for (int row = 0; row < TABLE.length; row++) {
+            for (int col = 0; col < TABLE[row].length; col++) {
+                if (isIsolated(row, col)) {
+                    count++;
+                }
             }
         }
         return count;
     }
-
 
     private static void printTable(boolean[][] table) {
         for (boolean[] row : table) {
