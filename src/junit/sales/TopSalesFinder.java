@@ -52,7 +52,9 @@ public class TopSalesFinder {
 
         public SalesRecord[] getSlice(int start, int length) {
             int actualLength = Math.min(length, size - start);
-            if (actualLength <= 0) return new SalesRecord[0];
+            if (actualLength <= 0) {
+                return new SalesRecord[0];
+            }
 
             SalesRecord[] slice = new SalesRecord[actualLength];
             for (int i = 0; i < actualLength; i++) {
@@ -100,7 +102,9 @@ public class TopSalesFinder {
 
         int count = 0;
         for (int i = 0; i < uniqueCount; i++) {
-            if (revenues[i] > amount) count++;
+            if (revenues[i] > amount) {
+                count++;
+            }
         }
 
         SalesRecordResult[] results = new SalesRecordResult[count];
@@ -132,5 +136,3 @@ public class TopSalesFinder {
     }
 
 }
-
-

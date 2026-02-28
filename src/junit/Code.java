@@ -33,7 +33,9 @@ public class Code {
     }
 
     public static Character mode(String input) {
-        if (input == null || input.isEmpty()) return null;
+        if (input == null || input.isEmpty()) {
+            return null;
+        }
 
         char mostFrequent = input.charAt(0);
         int maxCount = 0;
@@ -42,7 +44,7 @@ public class Code {
             char current = input.charAt(i);
             int count = getCharacterCount(input, current);
 
-            if (count > maxCount) { // при равных остаётся первый
+            if (count > maxCount) {
                 maxCount = count;
                 mostFrequent = current;
             }
@@ -52,35 +54,51 @@ public class Code {
     }
 
     public static int getCharacterCount(String allCharacters, char targetCharacter) {
-        if (allCharacters == null || allCharacters.isEmpty()) return 0;
+        if (allCharacters == null || allCharacters.isEmpty()) {
+            return 0;
+        }
 
         int count = 0;
         for (int i = 0; i < allCharacters.length(); i++) {
-            if (allCharacters.charAt(i) == targetCharacter) count++;
+            if (allCharacters.charAt(i) == targetCharacter) {
+                count++;
+            }
         }
         return count;
     }
 
     public static int[] removeDuplicates(int[] integers) {
-        if (integers == null) return null;
+        if (integers == null) {
+            return new int[0];
+        }
 
         LinkedHashSet<Integer> set = new LinkedHashSet<>();
-        for (int n : integers) set.add(n);
+        for (int n : integers) {
+            set.add(n);
+        }
 
         int[] result = new int[set.size()];
         int index = 0;
-        for (int n : set) result[index++] = n;
+        for (int n : set) {
+            result[index++] = n;
+        }
         return result;
     }
 
     public static int sumIgnoringDuplicates(int[] integers) {
-        if (integers == null) return 0;
+        if (integers == null) {
+            return 0;
+        }
 
         HashSet<Integer> set = new HashSet<>();
-        for (int n : integers) set.add(n);
+        for (int n : integers) {
+            set.add(n);
+        }
 
         int sum = 0;
-        for (int n : set) sum += n;
+        for (int n : set) {
+            sum += n;
+        }
         return sum;
     }
 }
