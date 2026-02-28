@@ -56,26 +56,7 @@ public class Code {
         return sb.toString();
     }
 
-    public static Character mode(String input) {
-        if (input.isEmpty()) {
-            return null;
-        }
 
-        int[] freq = new int[256];
-        for (char c : input.toCharArray()) {
-            freq[c]++;
-        }
-
-        char mostFrequent = input.charAt(0);
-        int maxCount = freq[mostFrequent];
-        for (char c : input.toCharArray()) {
-            if (freq[c] > maxCount) {
-                mostFrequent = c;
-                maxCount = freq[c];
-            }
-        }
-        return mostFrequent;
-    }
 
     public static String squareDigits(String s) {
         StringBuilder result = new StringBuilder();
