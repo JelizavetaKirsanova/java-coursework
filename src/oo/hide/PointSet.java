@@ -90,7 +90,9 @@ public class PointSet {
                 for (int j = i; j < size - 1; j++) {
                     points[j] = points[j + 1];
                 }
-                points[size - 1] = null;
+
+
+
                 size--;
                 return;
             }
@@ -118,8 +120,8 @@ public class PointSet {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof PointSet)) return false;
+        if (this == obj) {return true;}
+        if (!(obj instanceof PointSet)) {return false;}
 
         PointSet other = (PointSet) obj;
 
@@ -135,6 +137,10 @@ public class PointSet {
 
         return true;
     }
+
+
+
+
 
     @Override
     public int hashCode() {
