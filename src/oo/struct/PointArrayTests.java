@@ -17,6 +17,13 @@ public class PointArrayTests {
 
     @Test
     public void coordinatesAsObjects() {
+        Point3D[] trianglePoints = {new Point3D(1, 1, 0),
+                new Point3D(5, 1, 0),
+                new Point3D(3, 7, 1)};
+
+        for (Point3D point : trianglePoints) {
+            System.out.println(point.z());
+        }
 
     }
 

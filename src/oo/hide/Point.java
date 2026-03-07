@@ -12,12 +12,17 @@ public class Point {
 
     @Override
     public String toString() {
-        return null;
+        return "Point(" + x + ", " + y + ")";
     }
 
     @Override
     public boolean equals(Object obj) {
-        return false;
+
+        if (this == obj) return true;
+        if (!(obj instanceof Point)) return false;
+
+        Point other = (Point) obj;
+        return x == other.x && y == other.y;
     }
 
     @Override
