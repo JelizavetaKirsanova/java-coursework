@@ -42,7 +42,7 @@ public class TaxFreeSalesAnalyser {
 
         for (SalesRecord record : records) {
             if (record.productId().equals(id)) {
-                double totalWithVat = record.productPrice() * record.itemsSold();;
+                double totalWithVat = record.productPrice() * record.itemsSold();
                 double totalWithoutVat = priceWithoutVat(totalWithVat, record.date());
 
                 total += totalWithoutVat;}
@@ -86,7 +86,7 @@ public class TaxFreeSalesAnalyser {
 
         for (SalesRecord record : records) {
             double priceWithVat = record.productPrice();
-            double totalWithVat = priceWithVat * record.itemsSold();;
+            double totalWithVat = priceWithVat * record.itemsSold();
             double totalWithoutVat = priceWithoutVat(totalWithVat, record.date());
 
             totals.put(record.productId(), totals.getOrDefault(record.productId(), 0.0) + totalWithoutVat);}
