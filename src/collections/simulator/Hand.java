@@ -19,6 +19,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 
     private List<Card.CardValue> values = new ArrayList<>();
     private void setValues(){
+        values.clear();
         for (Card card : cards) {
             values.add(card.getValue());
         }
@@ -26,12 +27,14 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 
     private List<Card.CardSuit> suits = new ArrayList<>();
     private void setSuits(){
+        suits.clear();
         for (Card card : cards) {
             suits.add(card.getSuit());
         }
     }
     private List<List<Card.CardValue>> groups = new ArrayList<>();
     private void setGroups(){
+        groups.clear();
         for (Card.CardValue value : values) {
             boolean found = false;
             for (List<Card.CardValue> group : groups) {
@@ -95,19 +98,14 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
         if (isStraight() && isFlush()) {
                 return HandType.STRAIGHT_FLUSH;
             }
-
-
-
             for(List<Card.CardValue> group : groups){
                 if (group.size() == 4){
                     return HandType.FOUR_OF_A_KIND;
                 }
-
             }
             if (groups.size()== 2 && groups.getFirst().size() == 3 && groups.getLast().size() == 2 ){
                 return HandType.FULL_HOUSE;
             }
-
         for (List<Card.CardValue> group : groups) {
             if (group.size() == 3) {
                 return HandType.TRIPS;
@@ -115,12 +113,9 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
         if (isFlush()) {
             return HandType.FLUSH;
         }
-
         if (isStraight()) {
             return HandType.STRAIGHT;
         }
-
-
         int pairs = 0;
         for (List<Card.CardValue> group : groups) {
             if (group.size() == 2) {
@@ -130,12 +125,9 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
         if (pairs == 2) {
             return HandType.TWO_PAIRS;
         }
-
         if (pairs == 1){
             return HandType.ONE_PAIR;
         }
-
-
 
         return HandType.FLUSH;
     }
