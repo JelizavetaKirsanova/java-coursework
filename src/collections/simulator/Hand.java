@@ -16,27 +16,21 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
         return cards.toString();
     }
 
-
-    private List<Card.CardValue> values = new ArrayList<>();
-    private void setValues(){
+    private final List<Card.CardValue> values = new ArrayList<>();
+    private final List<Card.CardSuit> suits = new ArrayList<>();
+    private final List<List<Card.CardValue>> groups = new ArrayList<>();
+    private void prepareData() {
         values.clear();
+        suits.clear();
+        groups.clear();
+
         for (Card card : cards) {
             values.add(card.getValue());
-        }
-    }
-
-    private List<Card.CardSuit> suits = new ArrayList<>();
-    private void setSuits(){
-        suits.clear();
-        for (Card card : cards) {
             suits.add(card.getSuit());
         }
-    }
-    private List<List<Card.CardValue>> groups = new ArrayList<>();
-    private void setGroups(){
-        groups.clear();
         for (Card.CardValue value : values) {
             boolean found = false;
+
             for (List<Card.CardValue> group : groups) {
                 if (group.get(0).equals(value)) {
                     group.add(value);
@@ -48,6 +42,7 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
                 newGroup.add(value);
                 groups.add(newGroup);
             }}
+
         groups.sort((a, b) -> Integer.compare(b.size(), a.size()));
     }
 
@@ -105,40 +100,21 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
             }}
         return false;
     }
-    private boolean isTwoPairs(){
+    private int pairs() {
         int pairs = 0;
         for (List<Card.CardValue> group : groups) {
             if (group.size() == 2) {
                 pairs++;
             }
         }
-        if (pairs == 2) {
-            return true;
-        }
-        return false;
+        return pairs;
     }
-    private Boolean isOnePairs(){
-        int pairs = 0;
-        for (List<Card.CardValue> group : groups) {
-            if (group.size() == 2) {
-                pairs++;
-            }
-        }
-        if (pairs == 1) {
-            return true;
-        }
-        return false;
-    }
-
-
 
 
 
 
     public HandType getHandType() {
-        setValues();
-        setSuits();
-        setGroups();
+        prepareData();
 
         if(isStraight()&&isFlush()){
             return HandType.STRAIGHT_FLUSH;
@@ -158,11 +134,12 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
         if(isTrips()){
             return HandType.TRIPS;
         }
-        if(isTwoPairs()){
+        if (pairs()!=0 ){
+            if (pairs()==1){
+                return HandType.ONE_PAIR;
+
+            }
             return HandType.TWO_PAIRS;
-        }
-        if(isOnePairs()){
-            return HandType.ONE_PAIR;
         }
         return HandType.HIGH_CARD;
 
