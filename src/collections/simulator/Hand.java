@@ -84,6 +84,53 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
             return straight;
     }
 
+    private Boolean isFourOfAKind(){
+        for(List<Card.CardValue> group : groups){
+            if (group.size() == 4){
+                return true;
+            }
+        }
+        return false;
+    }
+    private boolean isFullHouse(){
+        if (groups.size()== 2 && groups.getFirst().size() == 3 && groups.getLast().size() == 2 ){
+            return true;
+        }
+        return false;
+    }
+    private boolean isTrips(){
+        for (List<Card.CardValue> group : groups) {
+            if (group.size() == 3) {
+                return true;
+            }}
+        return false;
+    }
+    private boolean isTwoPairs(){
+        int pairs = 0;
+        for (List<Card.CardValue> group : groups) {
+            if (group.size() == 2) {
+                pairs++;
+            }
+        }
+        if (pairs == 2) {
+            return true;
+        }
+        return false;
+    }
+    private Boolean isOnePairs(){
+        int pairs = 0;
+        for (List<Card.CardValue> group : groups) {
+            if (group.size() == 2) {
+                pairs++;
+            }
+        }
+        if (pairs == 1) {
+            return true;
+        }
+        return false;
+    }
+
+
 
 
 
@@ -93,43 +140,33 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
         setSuits();
         setGroups();
 
-
-
-        if (isStraight() && isFlush()) {
-                return HandType.STRAIGHT_FLUSH;
-            }
-            for(List<Card.CardValue> group : groups){
-                if (group.size() == 4){
-                    return HandType.FOUR_OF_A_KIND;
-                }
-            }
-            if (groups.size()== 2 && groups.getFirst().size() == 3 && groups.getLast().size() == 2 ){
-                return HandType.FULL_HOUSE;
-            }
-        for (List<Card.CardValue> group : groups) {
-            if (group.size() == 3) {
-                return HandType.TRIPS;
-            }}
-        if (isFlush()) {
+        if(isStraight()&&isFlush()){
+            return HandType.STRAIGHT_FLUSH;
+        }
+        if(isFourOfAKind()){
+            return HandType.FOUR_OF_A_KIND;
+        }
+        if(isFullHouse()){
+            return HandType.FULL_HOUSE;
+        }
+        if(isFlush()){
             return HandType.FLUSH;
         }
-        if (isStraight()) {
+        if(isStraight()){
             return HandType.STRAIGHT;
         }
-        int pairs = 0;
-        for (List<Card.CardValue> group : groups) {
-            if (group.size() == 2) {
-                pairs++;
-            }
+        if(isTrips()){
+            return HandType.TRIPS;
         }
-        if (pairs == 2) {
+        if(isTwoPairs()){
             return HandType.TWO_PAIRS;
         }
-        if (pairs == 1){
+        if(isOnePairs()){
             return HandType.ONE_PAIR;
         }
+        return HandType.HIGH_CARD;
 
-        return HandType.FLUSH;
+
     }
 
     public boolean contains(Card card) {
