@@ -16,19 +16,22 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
         return cards.toString();
     }
 
-    public HandType getHandType() {
-        List<Card.CardValue> values = new ArrayList<>();
+
+    private List<Card.CardValue> values = new ArrayList<>();
+    private void setValues(){
         for (Card card : cards) {
             values.add(card.getValue());
         }
+    }
 
-        List<Card.CardSuit> suits = new ArrayList<>();
-        for (Card card : cards){
+    private List<Card.CardSuit> suits = new ArrayList<>();
+    private void setSuits(){
+        for (Card card : cards) {
             suits.add(card.getSuit());
         }
-
-        List<List<Card.CardValue>> groups = new ArrayList<>();
-
+    }
+    private List<List<Card.CardValue>> groups = new ArrayList<>();
+    private void setGroups(){
         for (Card.CardValue value : values) {
             boolean found = false;
             for (List<Card.CardValue> group : groups) {
@@ -36,48 +39,60 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
                     group.add(value);
                     found = true;
                     break;
-                }
-            }
+                }}
             if (!found) {
                 List<Card.CardValue> newGroup = new ArrayList<>();
                 newGroup.add(value);
                 groups.add(newGroup);
             }}
-
-
         groups.sort((a, b) -> Integer.compare(b.size(), a.size()));
-        System.out.println(groups);
+    }
 
-
-
+    private boolean isFlush(){
         boolean flush = true;
         for (Card.CardSuit suit : suits) {
             if (!suit.equals(suits.getFirst())) {
                 flush = false;
                 break;
             }}
+        return flush;
+    }
 
+    private boolean isStraight(){
 
         boolean straight = false;
-        if (values.size() == 5) {
+        if (groups.size() == 5){
             List<Integer> ordinals = new ArrayList<>();
             for (Card.CardValue value : values) {
                 ordinals.add(value.ordinal());
             }
             Collections.sort(ordinals);
+            if (ordinals.equals(List.of(0, 1, 2, 3, 12))) {
+                return true;
+            }
 
-            boolean normalStraight = true;
             for (int i = 1; i < ordinals.size(); i++) {
                 if (ordinals.get(i) != ordinals.get(i - 1) + 1) {
-                    normalStraight = false;
-                    break;
+                    return straight;
                 }}
-            boolean wheelStraight = values.contains(Card.CardValue.A) && values.contains(Card.CardValue.S2) && values.contains(Card.CardValue.S3) && values.contains(Card.CardValue.S4) && values.contains(Card.CardValue.S5);
-            boolean broadwayStraight = values.contains(Card.CardValue.S10) && values.contains(Card.CardValue.J) && values.contains(Card.CardValue.Q) && values.contains(Card.CardValue.K) && values.contains(Card.CardValue.A);
-            straight = normalStraight || wheelStraight || broadwayStraight;
+            straight = true;
         }
 
-        if (straight && flush) {
+            return straight;
+    }
+
+
+
+
+
+    public HandType getHandType() {
+        setValues();
+        setSuits();
+        setGroups();
+
+
+
+        if (isStraight() && isFlush()) {
                 return HandType.STRAIGHT_FLUSH;
             }
 
@@ -97,11 +112,11 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
             if (group.size() == 3) {
                 return HandType.TRIPS;
             }}
-        if (flush) {
+        if (isFlush()) {
             return HandType.FLUSH;
         }
 
-        if (straight) {
+        if (isStraight()) {
             return HandType.STRAIGHT;
         }
 
@@ -121,7 +136,6 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
         }
 
 
-            System.out.println(groups);
 
         return HandType.FLUSH;
     }
