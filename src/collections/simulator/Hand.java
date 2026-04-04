@@ -19,10 +19,13 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
     private final List<Card.CardValue> values = new ArrayList<>();
     private final List<Card.CardSuit> suits = new ArrayList<>();
     private final List<List<Card.CardValue>> groups = new ArrayList<>();
+    private final List<Integer> ordinals = new ArrayList<>();
     private void prepareData() {
         values.clear();
         suits.clear();
         groups.clear();
+        ordinals.clear();
+
 
         for (Card card : cards) {
             values.add(card.getValue());
@@ -44,6 +47,12 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
             }}
 
         groups.sort((a, b) -> Integer.compare(b.size(), a.size()));
+
+        for (Card.CardValue value : values) {
+            ordinals.add(value.ordinal());
+        }
+        Collections.sort(ordinals);
+
     }
 
     private boolean isFlush(){
@@ -60,11 +69,6 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
 
         boolean straight = false;
         if (groups.size() == 5){
-            List<Integer> ordinals = new ArrayList<>();
-            for (Card.CardValue value : values) {
-                ordinals.add(value.ordinal());
-            }
-            Collections.sort(ordinals);
             if (ordinals.equals(List.of(0, 1, 2, 3, 12))) {
                 return true;
             }
@@ -159,8 +163,144 @@ public class Hand implements Iterable<Card>, Comparable<Hand> {
         return cards.iterator();
     }
 
+    private int getHandRating(){
+        prepareData();
+        if(isStraight()&&isFlush()){
+            return 9;
+        }
+        if(isFourOfAKind()){
+            return 8;
+        }
+        if(isFullHouse()){
+            return 7;
+        }
+        if(isFlush()){
+            return 6;
+        }
+        if(isStraight()){
+            return 5;
+        }
+        if(isTrips()){
+            return 4;
+        }
+        if (pairs()!=0 ){
+            if (pairs()==1){
+                return 2;
+
+            }
+            return 3;
+        }
+        return 1;
+    }
+
+
+
+
+    private List<Integer> getTieBreakers() {
+        prepareData();
+
+        HandType type = getHandType();
+        List<Integer> result = new ArrayList<>();
+
+        switch (type) {
+            case STRAIGHT_FLUSH:
+            case STRAIGHT:
+
+                break;
+
+            case FOUR_OF_A_KIND:
+                result.add(groups.get(0).get(0).ordinal());
+                result.add(groups.get(1).get(0).ordinal());
+                break;
+
+            case FULL_HOUSE:
+                result.add(groups.get(0).get(0).ordinal());
+                result.add(groups.get(1).get(0).ordinal());
+                break;
+
+            case FLUSH:
+            case HIGH_CARD:
+                Collections.reverse(ordinals);
+                result.addAll(ordinals);
+                break;
+
+            case TRIPS:
+                result.add(groups.get(0).get(0).ordinal());
+
+                List<Integer> tripsKickers = new ArrayList<>();
+                for (int i = 1; i < groups.size(); i++) {
+                    tripsKickers.add(groups.get(i).get(0).ordinal());
+                }
+                tripsKickers.sort(Collections.reverseOrder());
+                result.addAll(tripsKickers);
+                break;
+
+            case TWO_PAIRS:
+                List<Integer> pairValues = new ArrayList<>();
+                int kicker = -1;
+
+                for (List<Card.CardValue> group : groups) {
+                    if (group.size() == 2) {
+                        pairValues.add(group.get(0).ordinal());
+                    } else {
+                        kicker = group.get(0).ordinal();
+                    }
+                }
+
+                pairValues.sort(Collections.reverseOrder());
+                result.addAll(pairValues);
+                result.add(kicker);
+                break;
+
+            case ONE_PAIR:
+                result.add(groups.get(0).get(0).ordinal());
+
+                List<Integer> pairKickers = new ArrayList<>();
+                for (int i = 1; i < groups.size(); i++) {
+                    pairKickers.add(groups.get(i).get(0).ordinal());
+                }
+                pairKickers.sort(Collections.reverseOrder());
+                result.addAll(pairKickers);
+                break;
+
+            default:
+                break;
+        }
+
+        return result;
+    }
+
+
+
+
     @Override
     public int compareTo(Hand other) {
+        int thisRating = getHandRating();
+        int otherRating = other.getHandRating();
+
+        if (thisRating > otherRating) {
+            return 1;
+        }
+        if (thisRating < otherRating) {
+            return -1;
+        }
+
+        List<Integer> thisTieBreakers = getTieBreakers();
+        List<Integer> otherTieBreakers = other.getTieBreakers();
+
+        for (int i = 0; i < thisTieBreakers.size(); i++) {
+            int compare = Integer.compare(
+                    thisTieBreakers.get(i),
+                    otherTieBreakers.get(i)
+            );
+
+            if (compare != 0) {
+                return compare;
+            }
+        }
+
         return 0;
     }
+
+
 }
