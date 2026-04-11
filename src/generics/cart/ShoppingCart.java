@@ -88,7 +88,6 @@ public class ShoppingCart<T extends CartItem> {
         return (1 - multiplier) * 100;
     }
 
-    
     public void removeLastDiscount() {
         if (!discounts.isEmpty()) {
             discounts.removeLast();
