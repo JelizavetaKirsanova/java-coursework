@@ -26,12 +26,12 @@ public class Repository {
             throw new RuntimeException(e);
         }
 
-        List<Entry> entries = lines.stream()
+        return lines.stream()
                 .skip(1)
                 .map(line -> parseLine(line))
                 .toList();
 
-        return entries;
+
     }
     private Entry parseLine(String line) {
         String[] parts = line.split("\t");
@@ -41,15 +41,15 @@ public class Repository {
         String productId = parts[3];
         String category = parts[4];
         Double amount = Double.parseDouble(parts[6].replace(",", "."));
-        Entry entry = new Entry(
+
+
+        return new Entry(
                 rowNo,
                 productId,
                 date,
                 state,
                 category,
                 amount
-        );
-
-        return entry;}
+        );}
 
 }

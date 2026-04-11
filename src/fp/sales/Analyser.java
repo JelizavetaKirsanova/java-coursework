@@ -89,8 +89,8 @@ public class Analyser {
                 .limit(3)
                 .map(Map.Entry::getKey)
                 .toList();
-        String result = String.join(", ", resultList);
-        return result;
+
+        return String.join(", ", resultList);
     }
 
     public List<Entry> getAllRecordsPaged(int pageNumber, int pageSize) {
