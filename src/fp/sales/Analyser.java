@@ -1,6 +1,7 @@
 package fp.sales;
 
 import java.time.LocalDate;
+import java.util.AbstractMap;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -20,109 +21,84 @@ public class Analyser {
 
     public Double getTotalSales() {
 
-        List<Entry> entries = repository.getEntries();
-        double total = entries.stream()
+        return repository.getEntries().stream()
                 .mapToDouble(Entry::amount)
-                .sum();
-        return total;
-
-
-    }
+                .sum();}
 
     public Double getSalesByCategory(String category) {
-        List<Entry> entries = repository.getEntries();
-        double total = entries.stream()
-                .filter(e -> e.category().equals(category))
+        return repository.getEntries().stream()
+                .filter(entry -> entry.category().equals(category))
                 .mapToDouble(Entry::amount)
-                .sum();
-
-
-        return total;
-    }
+                .sum();}
 
     public Double getSalesBetween(LocalDate start, LocalDate end) {
-        List<Entry> entries = repository.getEntries();
-
-        double total = entries.stream()
-                .filter(e -> !e.date().isBefore(start) && !e.date().isAfter(end))
+        return repository.getEntries().stream()
+                .filter(entry -> !entry.date().isBefore(start))
+                .filter(entry -> !entry.date().isAfter(end))
                 .mapToDouble(Entry::amount)
-                .sum();
-
-        return total;}
+                .sum();}
 
     public String mostExpensiveItems() {
 
 
-        List<Entry> entries = repository.getEntries();
-
-        List<String> ids = entries.stream()
-                .sorted(Comparator.comparing(Entry::amount).reversed())
+        return repository.getEntries().stream()
+                .collect(Collectors.groupingBy(
+                        Entry::productId,
+                        Collectors.mapping(
+                                Entry::amount,
+                                Collectors.maxBy(Double::compare)
+                        )
+                ))
+                .entrySet().stream()
+                .filter(entry -> entry.getValue().isPresent())
+                .sorted((entry1, entry2) ->
+                        Double.compare(entry2.getValue().get(), entry1.getValue().get()))
                 .limit(3)
-                .map(Entry::productId)
+                .map(Map.Entry::getKey)
                 .sorted()
-                .toList();
-
-        String result = String.join(", ", ids);
-
-        return result;
+                .collect(Collectors.joining(", "));
     }
 
     public String statesWithBiggestSales() {
 
-        List<Entry> entries = repository.getEntries();
-
-        Map<String, Double> salesByState = entries.stream()
+        return repository.getEntries().stream()
                 .collect(Collectors.groupingBy(
                         Entry::state,
                         Collectors.summingDouble(Entry::amount)
-                ));
-
-        List<String> states = salesByState.entrySet().stream()
-                .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
+                ))
+                .entrySet().stream()
+                .sorted((entry1, entry2) ->
+                        Double.compare(entry2.getValue(), entry1.getValue()))
                 .limit(3)
                 .map(Map.Entry::getKey)
-                .toList();
-
-        String result = String.join(", ", states);
-
-        return result;
-    }
+                .collect(Collectors.joining(", "));}
 
     public String findMostProfitableItems() {
-
-
         List<Entry> entries = repository.getEntries();
 
         Map<String, Double> salesByProduct = entries.stream()
                 .collect(Collectors.groupingBy(
                         Entry::productId,
                         Collectors.summingDouble(Entry::amount)));
-        Map<String, Double> profitByProduct = salesByProduct.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        e -> e.getValue() * accountingService.getProfitMargin(e.getKey())));
-        List<String> bestProducts = profitByProduct.entrySet().stream()
+        List<String> resultList = salesByProduct.entrySet().stream()
+                .map(entry -> new AbstractMap.SimpleEntry<>(
+                        entry.getKey(),
+                        entry.getValue() * accountingService.getProfitMargin(entry.getKey())
+                ))
                 .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
                 .limit(3)
                 .map(Map.Entry::getKey)
                 .toList();
-        String result = String.join(", ", bestProducts);
-
+        String result = String.join(", ", resultList);
         return result;
-
-
     }
 
     public List<Entry> getAllRecordsPaged(int pageNumber, int pageSize) {
-        List<Entry> entries = repository.getEntries();
-
-        List<Entry> page = entries.stream()
+        return repository.getEntries().stream()
                 .sorted(Comparator.comparing(Entry::date))
                 .skip((long) pageNumber * pageSize)
                 .limit(pageSize)
-                .toList();
-
-        return page;}
+                .toList();}
 
     public List<String> getCategoryList() {
         // only needed for icd0019app
